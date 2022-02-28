@@ -13,9 +13,9 @@ class Program
 
     class Date
     {
-        public int Day { get; set; }
-        public int Month { get; set; }
-        public int Year { get; set; }
+        public int Day { get; set; } = CurrentDay;
+        public int Month { get; set; } = CurrentMonth;
+        public int Year { get; set; } = CurrentYear;
 
         public void CorrectDate()
         {
@@ -46,30 +46,101 @@ class Program
             if (Year == CurrentYear && Month == CurrentMonth && Day > CurrentDay) { Day = CurrentDay; }
         }
 
-        public override string ToString()
+        public string DayString()
         {
-            string day, month, year;
-            day = Day.ToString();
-            month = Month.ToString();
-            year = Year.ToString();
-
+            string day = Day.ToString();
             if (day.Length == 1) { day = "0" + day; }
+            return day;
+        }
+
+        public string MonthString()
+        {
+            string month = Month.ToString();
             if (month.Length == 1) { month = "0" + month; }
+            return month;
+        }
+
+        public string YearString()
+        {
+            string year = Year.ToString();
             if (year.Length == 1) { year = "000" + year; }
             else if (year.Length == 2) { year = "00" + year; }
             else if (year.Length == 3) { year = "0" + year; }
+            return year;
+        }
 
-            return day + "/" + month + "/" + year;
+        public override string ToString()
+        {
+            return DayString() + "/" + MonthString() + "/" + YearString();
         }
     }
 
     static void Main()
     {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
         Date date = new Date();
-        date.Day = 50;
-        date.Month = 2;
-        date.Year = 1996;
-        date.CorrectDate();
-        Console.WriteLine(date.ToString());
+        int selection = 3;
+
+        while (true)
+        {
+            Console.Clear();
+            date.CorrectDate();
+            Console.WriteLine(" Enter your date of birth.");
+            Console.WriteLine("             ▲            ");
+            Console.WriteLine("        " + date.ToString() + "       ");
+            Console.WriteLine("             ▼            ");
+
+            if (selection == 1)
+            {
+                Console.SetCursorPosition(8, 2);
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write(date.DayString());
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.SetCursorPosition(0, 0);
+            }
+            else if (selection == 2)
+            {
+                Console.SetCursorPosition(11, 2);
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write(date.MonthString());
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.SetCursorPosition(0, 0);
+            }
+            else
+            {
+                Console.SetCursorPosition(14, 2);
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write(date.YearString());
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.SetCursorPosition(0, 0);
+            }
+
+            switch (ReadKey(true).Key)
+            {
+                case ConsoleKey.UpArrow:
+                    if (selection == 1) { date.Day += 1; }
+                    else if (selection == 2) { date.Month += 1; }
+                    else if (selection == 3) { date.Year += 1; }
+                    break;
+                case ConsoleKey.DownArrow:
+                    if (selection == 1) { date.Day -= 1; }
+                    else if (selection == 2) { date.Month -= 1; }
+                    else if (selection == 3) { date.Year -= 1; }
+                    break;
+                case ConsoleKey.LeftArrow:
+                    if (selection != 1) { selection -= 1; }
+                    break;
+                case ConsoleKey.RightArrow:
+                    if (selection != 3) { selection += 1; }
+                    break;
+            }
+        }
     }
 }
