@@ -78,11 +78,14 @@ class Program
     static void Main()
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.CursorVisible = false;
 
         Date date = new Date();
         int selection = 3;
+        bool selectionFinished = false;
 
-        while (true)
+        // Get date of birth
+        while (!selectionFinished)
         {
             Console.Clear();
             date.CorrectDate();
@@ -90,6 +93,7 @@ class Program
             Console.WriteLine("             ▲            ");
             Console.WriteLine("        " + date.ToString() + "       ");
             Console.WriteLine("             ▼            ");
+            Console.WriteLine("\n  Press ENTER to finish. ");
 
             if (selection == 1)
             {
@@ -140,7 +144,61 @@ class Program
                 case ConsoleKey.RightArrow:
                     if (selection != 3) { selection += 1; }
                     break;
+                case ConsoleKey.Enter:
+                    selectionFinished = true;
+                    break;
             }
+        }
+
+        // Calculate and display age
+        double daysOld = (new DateTime(CurrentYear, CurrentMonth, CurrentDay) - new DateTime(date.Year, date.Month, date.Day)).TotalDays;
+        double yearsOld = Math.Floor(daysOld / 365.2425);
+        daysOld = Math.Floor(daysOld - (yearsOld * 365.2425));
+        double monthsOld = Math.Floor(daysOld / (365.25 / 12));
+        daysOld = Math.Floor(daysOld - (monthsOld * (365.25 / 12)));
+
+        Console.Clear();
+        Console.WriteLine(" You are:");
+        Console.WriteLine("  " + yearsOld + " years,");
+        Console.WriteLine("  " + monthsOld + " months and");
+        Console.WriteLine("  " + daysOld + " days");
+        Console.WriteLine(" old.");
+        Console.WriteLine("\n This is a total of " + (new DateTime(CurrentYear, CurrentMonth, CurrentDay) - new DateTime(date.Year, date.Month, date.Day)).TotalDays + " days.");
+        if (yearsOld == 0 && monthsOld == 0 && daysOld == 0)
+        {
+            Console.WriteLine(" Welcome to the world!");
+        }
+        else if (date.Year == 1 && date.Month == 1 && date.Day == 1)
+        {
+            Console.WriteLine(" Are you God?");
+        }
+        else if (date.Year == 1111 && date.Month == 11 && date.Day == 11)
+        {
+            Console.WriteLine(" 111111 111 1111111.");
+        }
+        else if (date.Year == 2005 && date.Month == 6 && date.Day == 30)
+        {
+            Console.WriteLine(" Hey Jess.");
+        }
+        else if (monthsOld == 0 && daysOld == 0)
+        {
+            Console.WriteLine(" Happy birthday!");
+        }
+        else if (yearsOld < 3)
+        {
+            Console.WriteLine(" Goo goo ga ga");
+        }
+        else if (yearsOld > 300)
+        {
+            Console.WriteLine(" How the hell.");
+        }
+        else if (yearsOld > 121)
+        {
+            Console.WriteLine(" You should really tell Guinness about this.");
+        }
+        else
+        {
+            Console.WriteLine(" Thanks for playing.");
         }
     }
 }
