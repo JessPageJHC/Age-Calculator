@@ -1,34 +1,32 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Drawing;
-using System.Collections.Generic;
-using static System.Console;
+﻿using static System.Console;
 
 class Program
 {
+    // Get current date
     static int CurrentDay = DateTime.Now.Day;
     static int CurrentMonth = DateTime.Now.Month;
     static int CurrentYear = DateTime.Now.Year;
 
+    // Class "Date" is for storing the entered day, month and year
     class Date
     {
         public int Day { get; set; } = CurrentDay;
         public int Month { get; set; } = CurrentMonth;
         public int Year { get; set; } = CurrentYear;
 
+        // CorrectDate ensures the date is a valid date, and if not, changes it to a valid one
         public void CorrectDate()
         {
-            // Make sure year is not negative or in the future
+            // Year cannot be negative or in the future
             if (Year > CurrentYear) { Year = CurrentYear; }
             if (Year < 1) { Year = 1; }
 
-            // Make sure month is a valid month and is not in the future
+            // Month must be 1-12, and cannot be in the future
             if (Month > 12) { Month = 12; }
             if (Month < 1) { Month = 1; }
             if (Year == CurrentYear && Month > CurrentMonth) { Month = CurrentMonth; }
 
-            // Make sure day is a valid day within current month and is not in the future
+            // Day must be a valid day within the currently selected month, and cannot be in the future
             if (Day < 1) { Day = 1; }
             if (Month == 1 && Day > 31) { Day = 31; }
             if (Month == 2 && DateTime.IsLeapYear(Year) == false && Day > 28) { Day = 28; }
@@ -46,6 +44,7 @@ class Program
             if (Year == CurrentYear && Month == CurrentMonth && Day > CurrentDay) { Day = CurrentDay; }
         }
 
+        // Get the day as a 2-character string
         public string DayString()
         {
             string day = Day.ToString();
@@ -53,6 +52,7 @@ class Program
             return day;
         }
 
+        // Get the month as a 2-character string
         public string MonthString()
         {
             string month = Month.ToString();
@@ -60,6 +60,7 @@ class Program
             return month;
         }
 
+        // Get the year as a 2-character string
         public string YearString()
         {
             string year = Year.ToString();
@@ -69,6 +70,7 @@ class Program
             return year;
         }
 
+        // Outputs date as a string in DD/MM/YYYY format
         public override string ToString()
         {
             return DayString() + "/" + MonthString() + "/" + YearString();
@@ -77,9 +79,11 @@ class Program
 
     static void Main()
     {
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
-        Console.CursorVisible = false;
+        // Allow special characters to be visible, and disable cursor
+        OutputEncoding = System.Text.Encoding.UTF8;
+        CursorVisible = false;
 
+        // Initialize variables
         Date date = new Date();
         int selection = 3;
         bool selectionFinished = false;
@@ -87,45 +91,47 @@ class Program
         // Get date of birth
         while (!selectionFinished)
         {
-            Console.Clear();
+            Clear();
             date.CorrectDate();
-            Console.WriteLine(" Enter your date of birth.");
-            Console.WriteLine("             ▲            ");
-            Console.WriteLine("        " + date.ToString() + "       ");
-            Console.WriteLine("             ▼            ");
-            Console.WriteLine("\n  Press ENTER to finish. ");
+            WriteLine("   Enter your date of birth.");
+            WriteLine("              ▲            ");
+            WriteLine("          " + date.ToString() + "       ");
+            WriteLine("              ▼            ");
+            WriteLine("\n   Press ENTER to calculate. ");
 
+            // Highlights the current selection
             if (selection == 1)
             {
-                Console.SetCursorPosition(8, 2);
-                Console.BackgroundColor = ConsoleColor.White;
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write(date.DayString());
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.SetCursorPosition(0, 0);
+                SetCursorPosition(10, 2);
+                BackgroundColor = ConsoleColor.White;
+                ForegroundColor = ConsoleColor.Black;
+                Write(date.DayString());
+                BackgroundColor = ConsoleColor.Black;
+                ForegroundColor = ConsoleColor.White;
+                SetCursorPosition(0, 0);
             }
             else if (selection == 2)
             {
-                Console.SetCursorPosition(11, 2);
-                Console.BackgroundColor = ConsoleColor.White;
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write(date.MonthString());
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.SetCursorPosition(0, 0);
+                SetCursorPosition(13, 2);
+                BackgroundColor = ConsoleColor.White;
+                ForegroundColor = ConsoleColor.Black;
+                Write(date.MonthString());
+                BackgroundColor = ConsoleColor.Black;
+                ForegroundColor = ConsoleColor.White;
+                SetCursorPosition(0, 0);
             }
             else
             {
-                Console.SetCursorPosition(14, 2);
-                Console.BackgroundColor = ConsoleColor.White;
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write(date.YearString());
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.SetCursorPosition(0, 0);
+                SetCursorPosition(16, 2);
+                BackgroundColor = ConsoleColor.White;
+                ForegroundColor = ConsoleColor.Black;
+                Write(date.YearString());
+                BackgroundColor = ConsoleColor.Black;
+                ForegroundColor = ConsoleColor.White;
+                SetCursorPosition(0, 0);
             }
 
+            // Gets user input
             switch (ReadKey(true).Key)
             {
                 case ConsoleKey.UpArrow:
@@ -150,55 +156,59 @@ class Program
             }
         }
 
-        // Calculate and display age
+        // Calculate age
         double daysOld = (new DateTime(CurrentYear, CurrentMonth, CurrentDay) - new DateTime(date.Year, date.Month, date.Day)).TotalDays;
         double yearsOld = Math.Floor(daysOld / 365.2425);
         daysOld = Math.Floor(daysOld - (yearsOld * 365.2425));
         double monthsOld = Math.Floor(daysOld / (365.25 / 12));
         daysOld = Math.Floor(daysOld - (monthsOld * (365.25 / 12)));
 
-        Console.Clear();
-        Console.WriteLine(" You are:");
-        Console.WriteLine("  " + yearsOld + " years,");
-        Console.WriteLine("  " + monthsOld + " months and");
-        Console.WriteLine("  " + daysOld + " days");
-        Console.WriteLine(" old.");
-        Console.WriteLine("\n This is a total of " + (new DateTime(CurrentYear, CurrentMonth, CurrentDay) - new DateTime(date.Year, date.Month, date.Day)).TotalDays + " days.");
+        // Display age
+        Clear();
+        WriteLine(" You are:");
+        WriteLine("  " + yearsOld + " years,");
+        WriteLine("  " + monthsOld + " months and");
+        WriteLine("  " + daysOld + " days");
+        WriteLine(" old.");
+        WriteLine("\n This is a total of " + (new DateTime(CurrentYear, CurrentMonth, CurrentDay) - new DateTime(date.Year, date.Month, date.Day)).TotalDays + " days.");
+
+        // Dumb Easter egg comments
         if (yearsOld == 0 && monthsOld == 0 && daysOld == 0)
         {
-            Console.WriteLine(" Welcome to the world!");
+            WriteLine(" Welcome to the world!");
         }
         else if (date.Year == 1 && date.Month == 1 && date.Day == 1)
         {
-            Console.WriteLine(" Are you God?");
+            WriteLine(" Are you God?");
         }
         else if (date.Year == 1111 && date.Month == 11 && date.Day == 11)
         {
-            Console.WriteLine(" 111111 111 1111111.");
+            WriteLine(" 111111 111 1111111.");
         }
         else if (date.Year == 2005 && date.Month == 6 && date.Day == 30)
         {
-            Console.WriteLine(" Hey Jess.");
+            WriteLine(" Hey Jess.");
         }
         else if (monthsOld == 0 && daysOld == 0)
         {
-            Console.WriteLine(" Happy birthday!");
+            WriteLine(" Happy birthday!");
         }
         else if (yearsOld < 3)
         {
-            Console.WriteLine(" Goo goo ga ga");
+            WriteLine(" Goo goo ga ga");
         }
         else if (yearsOld > 300)
         {
-            Console.WriteLine(" How the hell.");
+            WriteLine(" How the hell.");
         }
         else if (yearsOld > 121)
         {
-            Console.WriteLine(" You should really tell Guinness about this.");
+            WriteLine(" You should really tell Guinness about this.");
         }
-        else
-        {
-            Console.WriteLine(" Thanks for playing.");
-        }
+
+        // Finish program
+        Console.WriteLine("\n Press ENTER to finish.");
+        Read();
+        Console.Clear();
     }
 }
